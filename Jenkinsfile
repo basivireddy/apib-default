@@ -8,9 +8,8 @@ stage 'Dockerbuild'
                 echo 'Building docker image'
                 def app = docker.build "apib-default:${BRANCH}-${env.BUILD_NUMBER}"
 stage 'Container start'
-            image = apib-default:${BRANCH}-${env.BUILD_NUMBER}
-            echo $image
-            docker.image($image).withRun()
+      
+            docker.image("apib-default:${BRANCH}-${env.BUILD_NUMBER}").withRun()
      
  
   
