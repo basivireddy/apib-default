@@ -1,16 +1,30 @@
-node (){ 
-stage 'Checkout'
-            checkout scm
-
-stage 'Dockerbuild'
-                sh "basename ${env.BRANCH_NAME} | cut -d'-' -f1-2 > outFile3"
-                BRANCH = readFile('outFile3').trim()
-                echo 'Building docker image'
-                def app = docker.build "apib-default:${BRANCH}-${env.BUILD_NUMBER}"
-stage 'Container start'
-      
-            docker.image("apib-default:${BRANCH}-${env.BUILD_NUMBER}").withRun()
-     
- 
-  
+pipeline {
+  agent any
+   stages {
+    stage('Clone API Builder project') {
+      steps {
+        git 'https://github.com/basivireddy/apib-default'
+      }
+    }
+    stage('Build Docker image') {
+      steps{
+        script {
+           docker.build "myproject:1" 
+           sh "docker images"
+        }
+      }
+    }
+    stage('Run Docker Container') {
+      steps{
+        sh "docker run -d --name myproject  -p 8080:8080 myproject:1"
+        sh "docker ps"
+      }
+    }   
+    stage('Test API') {
+      steps{
+        sh  "sleep 4"
+        sh "curl http://server-ip:8080/api/greet?username=joel"
+      }
+    }    
+  }
 }
