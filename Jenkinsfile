@@ -5,16 +5,14 @@ stage 'Checkout'
 stage 'Dockerbuild'
                 sh "basename ${env.BRANCH_NAME} | cut -d'-' -f1-2 > outFile3"
                 BRANCH = readFile('outFile3').trim()
+                sh "env.BRANCH = $BRANCH
                 echo 'Building docker image'
                 def app = docker.build "apib-default:${BRANCH}-${env.BUILD_NUMBER}"
 stage 'Container start'
-     sh "echo ${BRANCH}-${env.BUILD_NUMBER}"
-     docker.image('apib-default:${BRANCH}-${env.BUILD_NUMBER}').withRun(){ c ->
-          /* Wait until mysql service is up */
-          sh  "sleep 4"
-          sh "curl http://server-ip:8080/api/greet?username=joel"
-    }
-
+            image = apib-default:${BRANCH}-${env.BUILD_NUMBER}
+            echo $image
+            docker.image($image).withRun()
+     
  
   
 }
