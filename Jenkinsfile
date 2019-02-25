@@ -8,6 +8,7 @@ stage 'Dockerbuild'
                 echo 'Building docker image'
                 def app = docker.build "apib-default:${BRANCH}-${env.BUILD_NUMBER}"
 stage 'Container start'
+     sh "echo ${BRANCH}-${env.BUILD_NUMBER}"
      docker.image('apib-default:${BRANCH}-${env.BUILD_NUMBER}').withRun(){ c ->
           /* Wait until mysql service is up */
           sh  "sleep 4"
