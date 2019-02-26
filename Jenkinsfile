@@ -3,7 +3,7 @@ pipeline {
    stages {
     stage('Clone API Builder project') {
       steps {
-        git 'https://github.com/jocotech/apib-default'
+        git 'https://github.com/basivireddy/apib-default'
       }
     }
     stage('Build Docker image') {
